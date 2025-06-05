@@ -1,1 +1,1 @@
-# 6.S955-Applied-Numerical-Algorithms
+# Implementation of class graph layout problem
