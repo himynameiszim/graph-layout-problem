@@ -8,3 +8,7 @@ git clone https://github.com/himynameiszim/graph-layout-problem.git
 cd graph-layout-problem/
 ```
 2. Run the script `graphLayout.m`
+
+## To do
+- implement conjugate gradients
+- implement preconditioner for conjugate gradients
