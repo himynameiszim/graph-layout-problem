@@ -12,7 +12,7 @@ function [x, x_old, residual_norm_old, total_iterations, flag] = gradientDescent
     for k=1:max_iterations
         if residual_norm_old(end) < tol
             flag = 1;
-            break;
+            return;
         end
         
         gradient = 2*(A*x - b);
