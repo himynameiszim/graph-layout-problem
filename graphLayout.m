@@ -23,10 +23,6 @@ V_position = [
 % 2. setting up linear systems
 [L_mat, degrees_mat, adjacency_mat] = buildGraphLaplacian(total_vertices, edges, U_idx);
 
-% init x_0, y_0
-x_init_guess = V_position(U_idx, 1);
-y_init_guess = V_position(U_idx, 2);
-
 % construct b_x and b_y
 bx = zeros(m, 1);
 by = zeros(m, 1);
@@ -47,27 +43,38 @@ for k=1:m
 end
 
 % 3. set up for solve
-tol = 1e-6;
+% init x_0, y_0
+x_init_guess = V_position(U_idx, 1);
+y_init_guess = V_position(U_idx, 2);
+tol = 1e-8;
 max_iteration = 500;
 eta = 0.05;
 
 % 4. gradient descent solve
 [x_gd_final, x_gd_old, resNorm_x_gd_old, x_gd_numIter, x_gd_flag] = gradientDescentSolve(L_mat, bx, x_init_guess, eta, tol, max_iteration);
 [y_gd_final, y_gd_old, resNorm_y_gd_old, y_gd_numIter, y_gd_flag] = gradientDescentSolve(L_mat, by, y_init_guess, eta, tol, max_iteration);
-if x_gd_flag * y_gd_flag == 1
-    fprintf('Gradient descent converged in %d iteration(s) \n', max(x_gd_numIter, y_gd_numIter));
-else 
-    fprintf('Gradient descent diverged after %d iteration(s) \n', max_iteration);
+if x_gd_flag && y_gd_flag
+    fprintf('Gradient descent converged to \n x = [ ');
+    fprintf('%.8f ', x_gd_final);
+    fprintf(']\n and \n y =[ ');
+    fprintf('%.8f ', y_gd_final);
+    fprintf(']\n in %d iteration(s) \n\n', max(x_gd_numIter, y_gd_numIter));
+    else 
+    fprintf('Gradient descent diverged after %d iteration(s) \n\n', max_iteration);
 end
 
 % 5. conjugate gradients solve
 
 [x_cg_final, x_cg_old, resNorm_x_cg_old, x_cg_numIter, x_cg_flag] = conjugateGradientSolve(L_mat, bx, x_init_guess, tol, max_iteration);
 [y_cg_final, y_cg_old, resNorm_y_cg_old, y_cg_numIter, y_cg_flag] = conjugateGradientSolve(L_mat, by, y_init_guess, tol, max_iteration);
-if x_cg_flag * y_cg_flag == 1
-    fprintf('Conjugate gradients converged in %d iteration(s) \n', max(x_cg_numIter, x_cg_numIter));
-else 
-    fprintf('Conjugate gradients diverged after %d iteration(s) \n', max_iteration);
+if x_cg_flag && y_cg_flag
+    fprintf('Conjugate gradients converged to \n x = [ ');
+    fprintf('%.8f ', x_cg_final);
+    fprintf(']\n and \n y =[ ');
+    fprintf('%.8f ', y_cg_final);
+    fprintf(']\n in %d iteration(s) \n\n', max(x_cg_numIter, y_cg_numIter));
+    else 
+    fprintf('Conjugate gradients diverged after %d iteration(s) \n\n', max_iteration);
 end
 
 % 6. preconditioned conjugate gradients solve (to be implemented)
