@@ -64,7 +64,6 @@ if x_gd_flag && y_gd_flag
 end
 
 % 5. conjugate gradients solve
-
 [x_cg_final, x_cg_old, resNorm_x_cg_old, x_cg_numIter, x_cg_flag] = conjugateGradientSolve(L_mat, bx, x_init_guess, tol, max_iteration);
 [y_cg_final, y_cg_old, resNorm_y_cg_old, y_cg_numIter, y_cg_flag] = conjugateGradientSolve(L_mat, by, y_init_guess, tol, max_iteration);
 if x_cg_flag && y_cg_flag
@@ -77,9 +76,19 @@ if x_cg_flag && y_cg_flag
     fprintf('Conjugate gradients diverged after %d iteration(s) \n\n', max_iteration);
 end
 
-% 6. preconditioned conjugate gradients solve (to be implemented)
-
-
+% 6. SSOR-preconditioned conjugate gradients solve 
+omega = 0.5;
+[x_pcg_final, x_pcg_old, resNorm_x_pcg_old, x_pcg_numIter, x_pcg_flag] = ssorSolve(L_mat, bx, x_init_guess, tol, max_iteration, omega);
+[y_pcg_final, y_pcg_old, resNorm_y_pcg_old, y_pcg_numIter, y_pcg_flag] = ssorSolve(L_mat, by, y_init_guess, tol, max_iteration, omega);
+if x_pcg_flag && y_pcg_flag
+    fprintf('SSOR preconditioned conjugate gradients converged to \n x = [ ');
+    fprintf('%.8f ', x_pcg_final);
+    fprintf(']\n and \n y =[ ');
+    fprintf('%.8f ', y_pcg_final);
+    fprintf(']\n in %d iteration(s) \n\n', max(x_pcg_numIter, y_pcg_numIter));
+    else 
+    fprintf('Conjugate gradients diverged after %d iteration(s) \n\n', max_iteration);
+end
 
 
 
