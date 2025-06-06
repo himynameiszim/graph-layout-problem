@@ -46,23 +46,31 @@ for k=1:m
     by(k) = fixed_neighbour_y;
 end
 
-% 3. set up gradient descent
+% 3. set up for solve
 tol = 1e-6;
 max_iteration = 500;
 eta = 0.05;
 
 % 4. gradient descent solve
-[x_gd_final, x_gd_old, res_norm_x_old, x_num_iteration, x_flag] = gradientDescentSolve(L_mat, bx, x_init_guess, eta, tol, max_iteration);
-[y_gd_final, y_gd_old, res_norm_y_old, y_num_iteration, y_flag] = gradientDescentSolve(L_mat, by, y_init_guess, eta, tol, max_iteration);
-if x_flag * y_flag == 1
-    fprintf('Gradient descent converged in %d iteration(s)', max(x_num_iteration, y_num_iteration));
+[x_gd_final, x_gd_old, resNorm_x_gd_old, x_gd_numIter, x_gd_flag] = gradientDescentSolve(L_mat, bx, x_init_guess, eta, tol, max_iteration);
+[y_gd_final, y_gd_old, resNorm_y_gd_old, y_gd_numIter, y_gd_flag] = gradientDescentSolve(L_mat, by, y_init_guess, eta, tol, max_iteration);
+if x_gd_flag * y_gd_flag == 1
+    fprintf('Gradient descent converged in %d iteration(s) \n', max(x_gd_numIter, y_gd_numIter));
+else 
+    fprintf('Gradient descent diverged after %d iteration(s) \n', max_iteration);
 end
-if x_flag * y_flag == 0
-    fprintf('Gradient descent diverged after %d iteration(s)', max_iteration);
+
+% 5. conjugate gradients solve
+
+[x_cg_final, x_cg_old, resNorm_x_cg_old, x_cg_numIter, x_cg_flag] = conjugateGradientSolve(L_mat, bx, x_init_guess, tol, max_iteration);
+[y_cg_final, y_cg_old, resNorm_y_cg_old, y_cg_numIter, y_cg_flag] = conjugateGradientSolve(L_mat, by, y_init_guess, tol, max_iteration);
+if x_cg_flag * y_cg_flag == 1
+    fprintf('Conjugate gradients converged in %d iteration(s) \n', max(x_cg_numIter, x_cg_numIter));
+else 
+    fprintf('Conjugate gradients diverged after %d iteration(s) \n', max_iteration);
 end
 
-
-
+% 6. preconditioned conjugate gradients solve (to be implemented)
 
 
 
